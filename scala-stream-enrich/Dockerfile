@@ -1,33 +1,14 @@
-FROM snowplow-docker-registry.bintray.io/snowplow/base-alpine:0.2.0
+FROM snowplow/stream-enrich-kinesis:1.1.3
 
-# The version of stream enrich to download.
-ENV ENRICH_VERSION="1.1.3"
+COPY config.hocon /snowplow/config/
+COPY enrichments/ /snowplow/config/enrichments/
+COPY iglu_resolver.json /snowplow/config/
 
-# The targeted platform
-ENV PLATFORM="kinesis"
+#RUN echo 'export $(strings /proc/1/environ | grep AWS_CONTAINER_CREDENTIALS_RELATIVE_URI)' >> /root/.profile
+#COPY  --chown=snowplow:root aws-java-sdk-sts-1.11.887.jar /opt/docker/lib/aws-java-sdk-sts-1.11.887.jar
+#RUN chown snowplow /opt/docker/lib/com.amazonaws.aws-java-sdk-sts-1.11.887.jar
 
-# The name of the archive to download.
-ENV ARCHIVE="snowplow_stream_enrich_${PLATFORM}_${ENRICH_VERSION}.zip"
+#COPY --chown=snowplow:rootdir:fd282db9fb50ca19b3f4f887be4d0c167deaed1ed20a422ae98fa8a79191b1dd in /opt/docker
 
-# Install the Scala Stream Collector.
-RUN mkdir -p /tmp/build && \
-    cd /tmp/build && \
-    wget -q http://dl.bintray.com/snowplow/snowplow-generic/${ARCHIVE} && \
-    unzip -d ${SNOWPLOW_BIN_PATH} ${ARCHIVE} && \
-    cd /tmp && \
-    rm -rf /tmp/build
-
-
-### Changes from peter siemen
-### IMPORTANT
-COPY config.hocon /snowplow/config/config.hocon
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-COPY enrichments/ $SNOWPLOW_CONFIG_PATH/enrichments/
-COPY iglu_resolver.json $SNOWPLOW_CONFIG_PATH/
-###
-
-# Defines an entrypoint script delegating the lauching of stream enrich to the snowplow user.
-# The script uses dumb-init as the top-level process.
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-ENTRYPOINT [ "docker-entrypoint.sh" ]
+ENTRYPOINT [ "/home/snowplow/bin/snowplow-stream-enrich" ]
+CMD [ "--config", "/snowplow/config/config.hocon", "--resolver", "file:/snowplow/config/iglu_resolver.json", "--enrichments", "file:/snowplow/config/enrichments/"]

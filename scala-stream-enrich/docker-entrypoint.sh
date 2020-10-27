@@ -12,7 +12,7 @@ cd $(eval echo ~snowplow)
 echo "using enrichers..."
 ls /snowplow/config/enrichments/
 
-# Make sure we run the collector as the snowplow user
+# Make sure we run the enricher as the snowplow user
 exec su-exec snowplow:snowplow /usr/bin/java \
   $SP_JAVA_OPTS -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap \
   -jar ${SNOWPLOW_BIN_PATH}/snowplow-stream-enrich-${PLATFORM}-${ENRICH_VERSION}.jar "$@" \
