@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 IMAGE_TAG=1.1.3
 REPO=petersiemen
 NAME=snowplow-stream-enrich-kinesis
