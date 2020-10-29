@@ -80,9 +80,3 @@ monitoring:
   } # Name-value pairs describing this job
   logging:
     level: DEBUG # You can optionally switch to INFO for production
-#  snowplow:
-#    method: get
-#    protocol: http
-#    port: 80
-#    app_id: snowplow # e.g. snowplow
-#    collector: d3rkrsqld9gmqf.cloudfront.net # ADD HERE # e.g. d3rkrsqld9gmqf.cloudfront.net
