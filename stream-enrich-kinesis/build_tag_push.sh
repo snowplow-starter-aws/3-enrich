@@ -3,7 +3,7 @@
 
 IMAGE_TAG=1.1.3
 REPO=petersiemen
-NAME=scala-stream-enrich
+NAME=snowplow-stream-enrich-kinesis
 
 docker build -t ${NAME}:${IMAGE_TAG} .
 docker tag ${NAME}:${IMAGE_TAG} ${REPO}/${NAME}:${IMAGE_TAG}
